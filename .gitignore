@@ -1,3 +1,10 @@
+# editor
+.vscode
+
+# local development settings
+rooaa/local_settings.py
+
+#----------------Template--------------
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
