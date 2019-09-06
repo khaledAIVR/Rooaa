@@ -1,6 +1,6 @@
 from flask import Flask
 
-from rooaa.api.capture import capture
+from rooaa.api.upload import upload
 
 
 def create_app():
@@ -12,7 +12,7 @@ def create_app():
     # Local development settings
     app.config.from_object("rooaa.local_settings")
 
-    # Register image capture routes
-    app.register_blueprint(capture)
+    # Register image upload routes
+    app.register_blueprint(upload)
 
     return app
