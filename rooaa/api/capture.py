@@ -22,6 +22,6 @@ def capture_image():
     except FileExistsError:
         pass
     finally:
-        img.save(os.path.join(path=UPLOAD_PATH, paths=img_name))
+        img.save(os.path.join(UPLOAD_PATH, img_name))
     return "Upload successful<place holder>"
 
