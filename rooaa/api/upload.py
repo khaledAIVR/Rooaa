@@ -24,7 +24,7 @@ def upload_image():
     if filename is None or data is None:
         abort(status=400)
 
-    img = image.decode_image_base64()
+    img = image.decode_image_base64(data=data)
     if img is None:
         abort(status=406)
 

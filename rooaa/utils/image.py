@@ -30,6 +30,6 @@ def save_image(path, binary_data, filename):
 
     try:
         with open(os.path.join(path, filename), "wb") as img:
-            img.write(data)
+            img.write(binary_data)
     except FileExistsError:
         pass
