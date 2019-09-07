@@ -1,7 +1,6 @@
-import base64
 import os
 
-from flask import request, abort
+from flask import request, abort, make_response, jsonify
 from flask.blueprints import Blueprint
 from flask_cors import CORS
 
@@ -15,20 +14,39 @@ CORS(upload)
 @upload.route("/api/v1/image", methods=["POST"])
 def upload_image():
     """ Route to upload image for the Object detection model """
-    if not request.json:
-        abort(status=400)
 
-    filename = request.json.get("filename", "")
-    data = request.json.get("data", "")
+    image_json = request.get_json(force=True)
+
+    # Required keys for the uploaded image
+    filename = image_json.get("filename", "")
+    data = image_json.get("data", "")
 
     if filename is None or data is None:
         abort(status=400)
 
-    header, encoded = data.split(",", 1)
-    img = base64.b64decode(encoded)
+    img = image.decode_image_base64()
+    if img is None:
+        abort(status=406)
 
-    image.create_image_directory(upload_path=UPLOAD_PATH)
-    image.save_image(path=UPLOAD_PATH, data=img, filename=filename)
+    # Saving image temporarily on system
+    try:
+        image.save_image(path=UPLOAD_PATH, binary_data=img, filename=filename)
+    except OSError as err:
+        print(f"{err}")
+        abort(status=500)
 
     return "Upload successful<place holder>"
 
+
+@upload.errorhandler(400)
+def keys_not_filled(error):
+    return make_response(
+        jsonify({"error": "Didn't receive JSON object or missing required keys"}), 400
+    )
+
+
+@upload.errorhandler(406)
+def keys_not_filled(error):
+    return make_response(
+        jsonify({"error": "received incorrectly formatted base64 image"}), 406
+    )
