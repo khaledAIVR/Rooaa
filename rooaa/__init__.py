@@ -1,6 +1,10 @@
-from flask import Flask
+from flask import Flask, jsonify
 
 from rooaa.api.upload import upload
+
+
+def bad_request(err):
+    return jsonify(error=str(err)), 400
 
 
 def create_app():
@@ -15,4 +19,6 @@ def create_app():
     # Register image upload routes
     app.register_blueprint(upload)
 
+    # Register error handlers
+    app.register_error_handler(400, bad_request)
     return app

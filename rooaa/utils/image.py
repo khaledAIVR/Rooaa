@@ -11,17 +11,18 @@ def decode_image_base64(data):
 
         img = base64.b64decode(encoded)
 
-    # Incorrect encoding format received
+    # Exception thrown when spliting header fails
     except ValueError:
-        return
+        pass
+    # Incorrect encoding format received
     except base64.binascii.Error:
-        return
+        pass
     else:
         return img
 
 
 def save_image(path, binary_data, filename):
-    """Creates given path directory if it doesn't exist and 
+    """Creates given path directory if it doesn't exist and
     saves image at the path with given filename and binary data.
     Raises OSError if it isn't able to save image or create directory
     """
