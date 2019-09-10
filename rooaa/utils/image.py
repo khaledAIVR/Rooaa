@@ -3,10 +3,14 @@ import os
 
 
 def decode_image_base64(data):
-    "Returns decoded base64 image if successful, else returns None"
+    """
+    Returns decoded base64 image if successful, else returns None.
+
+    :param data: base64 string
+    """
     try:
 
-        # Removing header that is encoded at the beginning of data
+        # Removing header that is encoded at the beginning of the data
         header, encoded = data.split(",", 1)
 
         img = base64.b64decode(encoded)
@@ -22,9 +26,13 @@ def decode_image_base64(data):
 
 
 def save_image(path, binary_data, filename):
-    """Creates given path directory if it doesn't exist and
-    saves image at the path with given filename and binary data.
-    Raises OSError if it isn't able to save image or create directory
+    """
+    Creates given path directory if it doesn't exist and saves image,
+    raises OSError if it isn't able to save image or create directory.
+
+    :param path: path to save image to.
+    :param binary_data: image data in bytes.
+    :param filename: image file name that is going to be saved
     """
     if not os.path.exists(path):
         os.makedirs(path)
