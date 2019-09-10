@@ -2,14 +2,12 @@ import os
 
 from flask import request, abort
 from flask.blueprints import Blueprint
-from flask_cors import CORS
 from werkzeug.exceptions import BadRequest
 
 from rooaa.settings import UPLOAD_PATH
 from rooaa.utils import image
 
 upload = Blueprint("upload", __name__)
-CORS(upload)
 
 
 @upload.route("/api/v1/image", methods=["POST"])

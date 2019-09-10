@@ -1,4 +1,6 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
+
 
 from rooaa.api.upload import upload
 
@@ -11,6 +13,9 @@ def bad_request(err):
 def create_app():
     """ Creates configured Flask app """
     app = Flask(__name__)
+
+    #! Temporary fix for XMLHttpRequest not working
+    CORS(upload)
 
     # Load common settings
     app.config.from_object(obj="rooaa.settings")
