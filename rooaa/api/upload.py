@@ -1,10 +1,9 @@
 import os
 
-from flask import request, abort
+from flask import request, abort, current_app
 from flask.blueprints import Blueprint
 from werkzeug.exceptions import BadRequest
 
-from rooaa.settings import UPLOAD_PATH
 from rooaa.utils import image
 
 upload = Blueprint("upload", __name__)
@@ -19,7 +18,7 @@ def upload_image():
     except BadRequest as err:
         abort(
             status=400,
-            description="Didn't receive JSON object or received incorrectly formatted JSON."
+            description="Didn't receive JSON object or received incorrectly formatted JSON.",
         )
 
     # Required keys for the uploaded image
@@ -27,21 +26,17 @@ def upload_image():
     data = image_json.get("data", None)
 
     if filename is None or data is None:
-        abort(
-            status=400,
-            description="Missing required keys",
-        )
+        abort(status=400, description="Missing required keys")
 
     img = image.decode_image_base64(data=data)
     if img is None:
-        abort(
-            status=400,
-            description="Received incorrectly formatted base64 image",
-        )
+        abort(status=400, description="Received incorrectly formatted base64 image")
 
     # Saving image temporarily on system
     try:
-        image.save_image(path=UPLOAD_PATH, binary_data=img, filename=filename)
+        image.save_image(
+            path=current_app.config["UPLOAD_PATH"], binary_data=img, filename=filename
+        )
     except OSError as err:
         print(f"{err}")
         abort(status=500)
