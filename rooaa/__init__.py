@@ -2,6 +2,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 
 
+from rooaa.api.predict import predict
 from rooaa.api.upload import upload
 
 
@@ -16,12 +17,16 @@ def create_app():
 
     #! Temporary fix for XMLHttpRequest not working
     CORS(upload)
+    CORS(predict)
 
     # Load common settings
     app.config.from_object(obj="rooaa.settings")
 
     # Local development settings
     app.config.from_object(obj="rooaa.local_settings")
+
+    # Register prediction routes
+    app.register_blueprint(blueprint=predict)
 
     # Register image upload routes
     app.register_blueprint(blueprint=upload)
