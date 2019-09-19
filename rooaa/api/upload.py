@@ -1,6 +1,6 @@
 import os
 
-from flask import request, abort, current_app
+from flask import request, abort, current_app, redirect, url_for
 from flask.blueprints import Blueprint
 from werkzeug.exceptions import BadRequest
 
@@ -28,6 +28,7 @@ def upload_image():
     if filename is None or data is None:
         abort(status=400, description="Missing required keys")
 
+    # Decoding image
     img = image.decode_image_base64(data=data)
     if img is None:
         abort(status=400, description="Received incorrectly formatted base64 image")
@@ -41,4 +42,6 @@ def upload_image():
         print(f"{err}")
         abort(status=500)
 
-    return "Upload successful<place holder>"
+    return redirect(
+        url_for(endpoint="predict.detect_object", filename=filename), code=303
+    )

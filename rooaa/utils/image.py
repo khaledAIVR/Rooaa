@@ -11,15 +11,15 @@ def decode_image_base64(data):
     try:
 
         # Removing header that is encoded at the beginning of the data
-        header, encoded = data.split(",", 1)
+        _, encoded = data.split(",", 1)
 
         img = base64.b64decode(encoded)
 
-    # Exception thrown when spliting header fails
-    except ValueError:
-        pass
     # Incorrect encoding format received
     except base64.binascii.Error:
+        pass
+    # Exception thrown when spliting header fails
+    except ValueError:
         pass
     else:
         return img
