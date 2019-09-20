@@ -1,7 +1,6 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 
-
 from rooaa.api.predict import predict
 from rooaa.api.upload import upload
 
@@ -24,6 +23,11 @@ def create_app():
 
     # Local development settings
     app.config.from_object(obj="rooaa.local_settings")
+
+    # Celery config settings
+    from .celery import celery
+
+    celery.conf.update(app.config)
 
     # Register prediction routes
     app.register_blueprint(blueprint=predict)

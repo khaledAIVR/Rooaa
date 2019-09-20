@@ -87,3 +87,39 @@ def predict_objects(layer_outputs, dimensions):
     idxs = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.3)
 
     return (idxs, class_ids, centers)
+
+
+#! Needs re-work
+def get_detected_objects(detections, dimensions, centers, class_ids):
+    """ Returns string list of objects detected and 
+    their basic positions if they exist, else returns None.
+
+    :param detections: List of yolo detections.
+    :param centers: List of object co-ordinates to calculate positions.
+    :param dimensions: Dimensions of the image.
+    :param class_ids: List of class ids to be used for labeling."""
+
+    if len(detections) > 0:
+        objects = []
+        H, W = dimensions
+        # load the COCO class labels our YOLO model was trained on
+        coco_path = str(
+            pl.Path(current_app.config["DARKNET_PATH"]) / pl.Path("data/coco.names")
+        )
+        with open(coco_path) as coco_names:
+            labels = coco_names.read().strip().split("\n")
+
+        # loop over the indexes we are keeping
+        for i in detections.flatten():
+            # find
+            center_x, center_y = centers[i][0], centers[i][1]
+
+            if center_x <= W / 3:
+                w_pos = "left"
+            elif center_x <= (W / 3 * 2):
+                w_pos = "center"
+            else:
+                w_pos = "right"
+
+            objects.append(f"{w_pos} {labels[class_ids[i]]}")
+        return objects

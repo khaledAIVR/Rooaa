@@ -1,5 +1,5 @@
 from rooaa import create_app
-
+from rooaa.celery import celery
 
 if __name__ == "__main__":
     app = create_app()

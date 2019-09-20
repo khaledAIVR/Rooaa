@@ -6,6 +6,8 @@ from werkzeug.exceptions import BadRequest
 
 from rooaa.utils import image
 
+from rooaa.celery import celery
+
 upload = Blueprint("upload", __name__)
 
 
