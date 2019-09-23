@@ -1,11 +1,21 @@
 #!/bin/bash
 
+# Installing redis
+if [ ! -d redis-stable/src ]; then
+    curl -O http://download.redis.io/redis-stable.tar.gz
+    tar xvzf redis-stable.tar.gz
+    rm redis-stable.tar.gz
+fi
+cd redis-stable
+make
+
 # Installing pip requirements
+cd ..
 touch rooaa/local_settings.py
 pip install -r requirements.txt
 
 # Installing darknet model
-if [  -d rooaa/ml-model/darknet ]; then
+if [ -d rooaa/ml-model/darknet ]; then
     rmdir rooaa/ml-model/darknet
 fi
 cd rooaa/ml-model

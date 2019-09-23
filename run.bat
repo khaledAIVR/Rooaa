@@ -1,4 +1,4 @@
-start wsl.exe -e ./run-redis.sh
+start bash -c -i "cd redis-stable && src/redis-server"
 timeout 5
-start CMD /K "h:/Code/Projects/rooaa/venv/Scripts/activate && celery worker -A manage.celery --loglevel=info"
-start CMD /K "h:/Code/Projects/rooaa/venv/Scripts/activate && python manage.py"
+start bash -c -i "source linux-venv/bin/activate && celery worker -A manage.celery --loglevel=info"
+start bash -c -i "source linux-venv/bin/activate && python manage.py"
