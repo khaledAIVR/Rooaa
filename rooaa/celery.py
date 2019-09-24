@@ -1,4 +1,4 @@
 from celery import Celery
-from rooaa.settings import CELERY_BROKER_URL
+from rooaa.settings import GeneralConfig
 
-celery = Celery(__name__, broker=CELERY_BROKER_URL)
+celery = Celery(__name__, broker=GeneralConfig.CELERY_BROKER_URL)

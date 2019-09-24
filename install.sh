@@ -10,11 +10,10 @@ cd redis-stable
 make
 
 # Installing pip requirements
-cd ..
-touch rooaa/local_settings.py
 pip install -r requirements.txt
 
 # Installing darknet model
+cd ..
 if [ -d rooaa/ml-model/darknet ]; then
     rmdir rooaa/ml-model/darknet
 fi

@@ -1,21 +1,23 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 
+from rooaa.settings import GeneralConfig, DevConfig
+
 
 def bad_request(err):
     """ 400 BadRequest error handler."""
     return jsonify(error=str(err)), 400
 
 
-def create_app():
+def create_app(config=DevConfig):
     """ Creates configured Flask app """
     app = Flask(__name__)
 
-    # Load common settings
-    app.config.from_object(obj="rooaa.settings")
+    # Load general settings
+    app.config.from_object(obj=GeneralConfig)
 
-    # Local development settings
-    app.config.from_object(obj="rooaa.local_settings")
+    # Load enviroment specific settings
+    app.config.from_object(obj=config)
 
     # Celery config settings
     from rooaa.celery import celery
