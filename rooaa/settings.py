@@ -16,13 +16,13 @@ class GeneralConfig:
 
 # Future production config settings
 class ProdConfig:
-    pass
+    DEBUG = False
+    HOST = "0.0.0.0"
+    PORT = 5000
 
 
 # Local development config settings
 class DevConfig:
     DEBUG = True
-
     HOST = "0.0.0.0"
-
     PORT = 5000
