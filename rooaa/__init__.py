@@ -2,6 +2,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 
 from rooaa.settings import GeneralConfig, ProdConfig
+from rooaa.extensions import celery
 
 
 def bad_request(err):
@@ -19,10 +20,7 @@ def create_app(config=ProdConfig):
     # Load enviroment specific settings
     app.config.from_object(obj=config)
 
-    # Celery config settings
-    from rooaa.celery import celery
-
-    celery.conf.update(app.config)
+    celery.init_app(app)
 
     from rooaa.api.predict import predict
     from rooaa.api.upload import upload
