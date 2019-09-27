@@ -16,11 +16,7 @@ def detect_object(filename):
     image_path = str(pl.Path(current_app.config["UPLOAD_PATH"]) / pl.Path(filename))
     H, W = yolo.construct_image_blob(image_path=image_path, model=net)
 
-    # determine only the *output* layer names that we need from YOLO
-    layer_names = net.getLayerNames()
-    layer_names = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
-
-    layer_outputs = net.forward(layer_names)
+    layer_outputs = yolo.get_layer_outputs(model=net)
 
     detections, class_ids, centers = yolo.predict_objects(
         layer_outputs=layer_outputs, dimensions=(H, W)
