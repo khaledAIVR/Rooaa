@@ -17,7 +17,7 @@ def load_model():
 def construct_image_blob(image_path, model):
     """ Loads image and contructs blob to be passed to the model and returns
     tuple of image dimensions.
-    
+
     :param image_path: Path to the given image
     :param model: Model instance"""
 
@@ -36,10 +36,20 @@ def construct_image_blob(image_path, model):
     return H, W
 
 
+def get_layer_outputs(model):
+    """ Returns only the *output* layer names that we need from YOLO
+
+    :param model: Model Instance """
+    layer_names = model.getLayerNames()
+    layer_names = [layer_names[i[0] - 1] for i in model.getUnconnectedOutLayers()]
+
+    return model.forward(layer_names)
+
+
 def predict_objects(layer_outputs, dimensions):
     """ Initialize our lists of detecting bounding boxes and confidences and returns
     tuple of Indices, classIDs and center co-ordinates respectively.
-    
+
     :param layer_outputs: Given layer outputs of image
     :param dimesions: Tuple of dimensions of image"""
 
@@ -87,3 +97,39 @@ def predict_objects(layer_outputs, dimensions):
     idxs = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.3)
 
     return (idxs, class_ids, centers)
+
+
+#! Needs re-work
+def get_detected_objects(detections, dimensions, centers, class_ids):
+    """ Returns string list of objects detected and 
+    their basic positions if they exist, else returns None.
+
+    :param detections: List of yolo detections.
+    :param centers: List of object co-ordinates to calculate positions.
+    :param dimensions: Dimensions of the image.
+    :param class_ids: List of class ids to be used for labeling."""
+
+    if len(detections) > 0:
+        objects = []
+        H, W = dimensions
+        # load the COCO class labels our YOLO model was trained on
+        coco_path = str(
+            pl.Path(current_app.config["DARKNET_PATH"]) / pl.Path("data/coco.names")
+        )
+        with open(coco_path) as coco_names:
+            labels = coco_names.read().strip().split("\n")
+
+        # loop over the indexes we are keeping
+        for i in detections.flatten():
+            # find
+            center_x, center_y = centers[i][0], centers[i][1]
+
+            if center_x <= W / 3:
+                w_pos = "left"
+            elif center_x <= (W / 3 * 2):
+                w_pos = "center"
+            else:
+                w_pos = "right"
+
+            objects.append(f"{w_pos} {labels[class_ids[i]]}")
+        return objects

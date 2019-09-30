@@ -3,7 +3,7 @@
 
 # local development settings
 rooaa/local_settings.py
-
+redis-stable/
 #----------------Template--------------
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -96,6 +96,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+linux-venv/
 
 # Spyder project settings
 .spyderproject

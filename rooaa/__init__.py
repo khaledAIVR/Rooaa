@@ -1,9 +1,8 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 
-
-from rooaa.api.predict import predict
-from rooaa.api.upload import upload
+from rooaa.settings import GeneralConfig, ProdConfig
+from rooaa.extensions import celery
 
 
 def bad_request(err):
@@ -11,23 +10,27 @@ def bad_request(err):
     return jsonify(error=str(err)), 400
 
 
-def create_app():
+def create_app(config=ProdConfig):
     """ Creates configured Flask app """
     app = Flask(__name__)
+
+    # Load general settings
+    app.config.from_object(obj=GeneralConfig)
+
+    # Load enviroment specific settings
+    app.config.from_object(obj=config)
+
+    celery.init_app(app)
+
+    from rooaa.api.predict import predict
+    from rooaa.api.upload import upload
 
     #! Temporary fix for XMLHttpRequest not working
     CORS(upload)
     CORS(predict)
 
-    # Load common settings
-    app.config.from_object(obj="rooaa.settings")
-
-    # Local development settings
-    app.config.from_object(obj="rooaa.local_settings")
-
     # Register prediction routes
     app.register_blueprint(blueprint=predict)
-
     # Register image upload routes
     app.register_blueprint(blueprint=upload)
 

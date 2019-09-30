@@ -1,5 +1,3 @@
-import os
-
 from flask import request, abort, current_app, redirect, url_for
 from flask.blueprints import Blueprint
 from werkzeug.exceptions import BadRequest
@@ -38,7 +36,7 @@ def upload_image():
         image.save_image(
             path=current_app.config["UPLOAD_PATH"], binary_data=img, filename=filename
         )
-    except OSError as err:
+    except Exception as err:
         print(f"{err}")
         abort(status=500)
 

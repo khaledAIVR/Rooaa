@@ -1,4 +1,6 @@
 flask
+celery
+redis
 flask_cors
 opencv-python
 pillow
