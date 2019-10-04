@@ -1,5 +1,6 @@
 import base64
 import os
+from contextlib import suppress
 
 
 def decode_image_base64(data):
@@ -34,11 +35,9 @@ def save_image(path, binary_data, filename):
     :param binary_data: image data in bytes.
     :param filename: image file name that is going to be saved
     """
-    if not os.path.exists(path):
+    with suppress(OSError):
         os.makedirs(path)
 
-    try:
-        with open(os.path.join(path, filename), "wb") as img:
+    with open(os.path.join(path, filename), "wb") as img:
+        with suppress(FileExistsError):
             img.write(binary_data)
-    except FileExistsError:
-        pass
