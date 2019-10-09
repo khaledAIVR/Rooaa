@@ -8,7 +8,11 @@ appdirs==1.4.3            # via black
 attrs==19.1.0             # via black
 black==19.3b0
 click==7.0                # via black, pip-tools
-pep8==1.7.1
+entrypoints==0.3          # via flake8
+flake8==3.7.8
+mccabe==0.6.1             # via flake8
 pip-tools==4.1.0
+pycodestyle==2.5.0        # via flake8
+pyflakes==2.1.1           # via flake8
 six==1.12.0               # via pip-tools
 toml==0.10.0              # via black

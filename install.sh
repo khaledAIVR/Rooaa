@@ -10,6 +10,7 @@ cd redis-stable
 make
 
 # Installing pip requirements
+cd ..
 pip install -r requirements.txt
 
 # Installing darknet model
