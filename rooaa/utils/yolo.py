@@ -1,17 +1,25 @@
 import pathlib as pl
 
-from flask import current_app
-
 import cv2
 import numpy as np
 
+from .debug import performance
+from rooaa.settings import GeneralConfig
 
+
+@performance
 def load_model():
-    """ load our YOLO object detector trained on COCO dataset (80 classes). """
-    return cv2.dnn.readNetFromDarknet(
-        str(pl.Path(current_app.config["DARKNET_PATH"]) / pl.Path("cfg/yolov3.cfg")),
-        str(pl.Path(current_app.config["DARKNET_PATH"]) / pl.Path("yolov3.weights")),
+    """ load our YOLO object detector and returns the model and layer names."""
+
+    model = cv2.dnn.readNetFromDarknet(
+        str(pl.Path(GeneralConfig.DARKNET_PATH) / pl.Path("cfg/yolov3.cfg")),
+        str(pl.Path(GeneralConfig.DARKNET_PATH) / pl.Path("yolov3.weights")),
     )
+
+    layer_names = model.getLayerNames()
+    layer_names = [layer_names[i[0] - 1] for i in model.getUnconnectedOutLayers()]
+
+    return model, layer_names
 
 
 def construct_image_blob(image_path, model):
@@ -36,22 +44,15 @@ def construct_image_blob(image_path, model):
     return H, W
 
 
-def get_layer_outputs(model):
-    """ Returns only the *output* layer names that we need from YOLO
-
-    :param model: Model Instance """
-    layer_names = model.getLayerNames()
-    layer_names = [layer_names[i[0] - 1] for i in model.getUnconnectedOutLayers()]
-
-    return model.forward(layer_names)
-
-
-def predict_objects(layer_outputs, dimensions):
+@performance
+def predict_objects(layer_names, dimensions, model):
     """ Initialize our lists of detecting bounding boxes and confidences and returns
     tuple of Indices, classIDs and center co-ordinates respectively.
 
-    :param layer_outputs: Given layer outputs of image
-    :param dimesions: Tuple of dimensions of image"""
+    :param layer_names: Given layer names of model
+    :param dimesions: Tuple of dimensions of image
+    :param model: YOLO model instance
+    """
 
     boxes = []
     confidences = []
@@ -59,6 +60,7 @@ def predict_objects(layer_outputs, dimensions):
     centers = []
 
     H, W = dimensions
+    layer_outputs = model.forward(layer_names)
 
     # loop over each of the layer outputs
     for output in layer_outputs:
@@ -114,7 +116,7 @@ def get_detected_objects(detections, dimensions, centers, class_ids):
         H, W = dimensions
         # load the COCO class labels our YOLO model was trained on
         coco_path = str(
-            pl.Path(current_app.config["DARKNET_PATH"]) / pl.Path("data/coco.names")
+            pl.Path(GeneralConfig.DARKNET_PATH) / pl.Path("data/coco.names")
         )
         with open(coco_path) as coco_names:
             labels = coco_names.read().strip().split("\n")
