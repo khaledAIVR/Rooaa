@@ -3,16 +3,14 @@ import pathlib as pl
 import cv2
 import numpy as np
 
-from .debug import performance
 from rooaa.settings import GeneralConfig
 
 
-@performance
 def load_model():
     """ load our YOLO object detector and returns the model and layer names."""
 
     model = cv2.dnn.readNetFromDarknet(
-        str(pl.Path(GeneralConfig.DARKNET_PATH) / pl.Path("cfg/yolov3.cfg")),
+        str(pl.Path(GeneralConfig.DARKNET_PATH) / pl.Path("yolov3.cfg")),
         str(pl.Path(GeneralConfig.DARKNET_PATH) / pl.Path("yolov3.weights")),
     )
 
@@ -44,7 +42,6 @@ def construct_image_blob(image_path, model):
     return H, W
 
 
-@performance
 def predict_objects(layer_names, dimensions, model):
     """ Initialize our lists of detecting bounding boxes and confidences and returns
     tuple of Indices, classIDs and center co-ordinates respectively.
@@ -116,7 +113,7 @@ def get_detected_objects(detections, dimensions, centers, class_ids):
         H, W = dimensions
         # load the COCO class labels our YOLO model was trained on
         coco_path = str(
-            pl.Path(GeneralConfig.DARKNET_PATH) / pl.Path("data/coco.names")
+            pl.Path(GeneralConfig.DARKNET_PATH) / pl.Path("coco/coco.names")
         )
         with open(coco_path) as coco_names:
             labels = coco_names.read().strip().split("\n")

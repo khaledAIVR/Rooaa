@@ -14,14 +14,7 @@ cd ..
 pip install -r requirements.txt
 
 # Installing darknet model
-cd ..
-if [ -d rooaa/ml-model/darknet ]; then
-    rmdir rooaa/ml-model/darknet
-fi
-cd rooaa/ml-model
-git clone https://github.com/pjreddie/darknet.git
-cd darknet
-make
+cd rooaa/ml-model/darknet
 wget https://pjreddie.com/media/files/yolov3.weights
 
 # Installing densedepth model

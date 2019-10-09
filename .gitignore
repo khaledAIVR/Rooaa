@@ -4,6 +4,10 @@
 # local development settings
 rooaa/local_settings.py
 redis-stable/
+# Dense Depth  & Yolo weights
+*.weights
+*.h5
+
 #----------------Template--------------
 # Byte-compiled / optimized / DLL files
 __pycache__/
