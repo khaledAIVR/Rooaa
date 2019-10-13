@@ -14,5 +14,6 @@ mccabe==0.6.1             # via flake8
 pip-tools==4.1.0
 pycodestyle==2.5.0        # via flake8
 pyflakes==2.1.1           # via flake8
+pysnooper==0.2.8
 six==1.12.0               # via pip-tools
 toml==0.10.0              # via black

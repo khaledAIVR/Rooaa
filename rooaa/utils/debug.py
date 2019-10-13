@@ -1,5 +1,7 @@
 import time
 
+import pysnooper
+
 
 def performance(func):
     """Simple timing decorator for performance testing"""

@@ -5,19 +5,18 @@ import numpy as np
 
 from rooaa.settings import GeneralConfig
 
+LAYER_NAMES = ["yolo_82", "yolo_94", "yolo_106"]
+
 
 def load_model():
-    """ load our YOLO object detector and returns the model and layer names."""
+    """ load our YOLO object detector and returns the models"""
 
     model = cv2.dnn.readNetFromDarknet(
-        str(pl.Path(GeneralConfig.DARKNET_PATH) / pl.Path("yolov3.cfg")),
-        str(pl.Path(GeneralConfig.DARKNET_PATH) / pl.Path("yolov3.weights")),
+        str(GeneralConfig.DARKNET_PATH / pl.Path("yolov3.cfg")),
+        str(GeneralConfig.DARKNET_PATH / pl.Path("yolov3.weights")),
     )
 
-    layer_names = model.getLayerNames()
-    layer_names = [layer_names[i[0] - 1] for i in model.getUnconnectedOutLayers()]
-
-    return model, layer_names
+    return model
 
 
 def construct_image_blob(image_path, model):
@@ -42,11 +41,10 @@ def construct_image_blob(image_path, model):
     return H, W
 
 
-def predict_objects(layer_names, dimensions, model):
+def predict_objects(dimensions, model):
     """ Initialize our lists of detecting bounding boxes and confidences and returns
     tuple of Indices, classIDs and center co-ordinates respectively.
 
-    :param layer_names: Given layer names of model
     :param dimesions: Tuple of dimensions of image
     :param model: YOLO model instance
     """
@@ -57,7 +55,7 @@ def predict_objects(layer_names, dimensions, model):
     centers = []
 
     H, W = dimensions
-    layer_outputs = model.forward(layer_names)
+    layer_outputs = model.forward(LAYER_NAMES)
 
     # loop over each of the layer outputs
     for output in layer_outputs:
@@ -112,16 +110,14 @@ def get_detected_objects(detections, dimensions, centers, class_ids):
         objects = []
         H, W = dimensions
         # load the COCO class labels our YOLO model was trained on
-        coco_path = str(
-            pl.Path(GeneralConfig.DARKNET_PATH) / pl.Path("coco/coco.names")
-        )
+        coco_path = str(GeneralConfig.DARKNET_PATH / pl.Path("coco/coco.names"))
         with open(coco_path) as coco_names:
             labels = coco_names.read().strip().split("\n")
 
         # loop over the indexes we are keeping
         for i in detections.flatten():
             # find
-            center_x, center_y = centers[i][0], centers[i][1]
+            center_x, _ = centers[i][0], centers[i][1]
 
             if center_x <= W / 3:
                 w_pos = "left"
