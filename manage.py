@@ -1,8 +1,19 @@
-from rooaa import create_app
-from rooaa.settings import DevConfig
-from rooaa.extensions import celery
+import argparse
 
-app = create_app(config=DevConfig)
+from rooaa import create_app
 
 if __name__ == "__main__":
-    app.run(host=app.config.get("HOST", "localhost"), port=app.config.get("PORT", 9000))
+    parser = argparse.ArgumentParser()
+
+    # CLI option to run using production environment or development
+    parser.add_argument(
+        "-p", "--prod", help="Runs app in production environment", action="store_true"
+    )
+    args = parser.parse_args()
+
+    if args.prod:
+        app = create_app()
+    else:
+        app = create_app(config="rooaa.settings.DevConfig")
+
+    app.run(host=app.config.get("HOST"), port=app.config.get("PORT"))

@@ -1,35 +1,9 @@
-import flask
 from celery import Celery
 
 
-class FlaskCelery(Celery):
-    def __init__(self, *args, **kwargs):
+celery = Celery(main=__name__)
 
-        super(FlaskCelery, self).__init__(*args, **kwargs)
-        self.patch_task()
+# Should have "CELERY_" prefix
+celery.config_from_object(obj="rooaa.settings.Config", namespace="CELERY")
 
-        if "app" in kwargs:
-            self.init_app(kwargs["app"])
-
-    def patch_task(self):
-        TaskBase = self.Task
-        _celery = self
-
-        class ContextTask(TaskBase):
-            abstract = True
-
-            def __call__(self, *args, **kwargs):
-                if flask.has_app_context():
-                    return TaskBase.__call__(self, *args, **kwargs)
-                else:
-                    with _celery.app.app_context():
-                        return TaskBase.__call__(self, *args, **kwargs)
-
-        self.Task = ContextTask
-
-    def init_app(self, app):
-        self.app = app
-        self.config_from_object(app.config)
-
-
-celery = FlaskCelery()
+celery.autodiscover_tasks(packages=["rooaa.api"])

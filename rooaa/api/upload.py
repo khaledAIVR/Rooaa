@@ -13,7 +13,7 @@ def upload_image():
 
     try:
         image_json = request.get_json(force=True)
-    except BadRequest as err:
+    except BadRequest:
         abort(
             status=400,
             description="Didn't receive JSON object or received incorrectly formatted JSON.",
