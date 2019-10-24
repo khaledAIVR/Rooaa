@@ -3,7 +3,7 @@ import pathlib as pl
 import cv2
 import numpy as np
 
-from rooaa.settings import GeneralConfig
+from rooaa.settings import Config
 
 LAYER_NAMES = ["yolo_82", "yolo_94", "yolo_106"]
 
@@ -12,8 +12,8 @@ def load_model():
     """ load our YOLO object detector and returns the models"""
 
     model = cv2.dnn.readNetFromDarknet(
-        str(GeneralConfig.DARKNET_PATH / pl.Path("yolov3.cfg")),
-        str(GeneralConfig.DARKNET_PATH / pl.Path("yolov3.weights")),
+        str(Config.DARKNET_PATH / pl.Path("yolov3.cfg")),
+        str(Config.DARKNET_PATH / pl.Path("yolov3.weights")),
     )
 
     return model
@@ -110,7 +110,7 @@ def get_detected_objects(detections, dimensions, centers, class_ids):
         objects = []
         H, W = dimensions
         # load the COCO class labels our YOLO model was trained on
-        coco_path = str(GeneralConfig.DARKNET_PATH / pl.Path("coco/coco.names"))
+        coco_path = str(Config.DARKNET_PATH / pl.Path("coco/coco.names"))
         with open(coco_path) as coco_names:
             labels = coco_names.read().strip().split("\n")
 
