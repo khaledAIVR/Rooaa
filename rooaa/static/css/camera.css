@@ -1,0 +1,9 @@
+body {
+    text-align: center;
+    background-image: url("../assets/rooaa.png");
+    /* The image used */
+    background-position: center;
+    /* Center the image */
+    background-repeat: no-repeat;
+    /* Do not repeat the image */
+}

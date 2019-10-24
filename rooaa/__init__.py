@@ -16,6 +16,7 @@ def create_app(config="rooaa.settings.ProdConfig"):
 
     from rooaa.api.predict import predict
     from rooaa.api.upload import upload
+    from rooaa.api.camera import camera
 
     #! Temporary fix for XMLHttpRequest not working
     CORS(upload)
@@ -25,6 +26,9 @@ def create_app(config="rooaa.settings.ProdConfig"):
     app.register_blueprint(blueprint=predict)
     # Register image upload routes
     app.register_blueprint(blueprint=upload)
+
+    # Register CameraApp routes
+    app.register_blueprint(blueprint=camera)
 
     # Register error handlers
     app.register_error_handler(code_or_exception=400, f=bad_request)

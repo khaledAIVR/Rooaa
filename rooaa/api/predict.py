@@ -1,3 +1,4 @@
+import os
 import pathlib as pl
 from threading import Lock
 
@@ -30,5 +31,7 @@ def detect_object(filename):
         centers=centers,
         class_ids=class_ids,
     )
+
+    os.remove(image_path)
 
     return ",".join(objects) if objects is not None else "Nothing"
