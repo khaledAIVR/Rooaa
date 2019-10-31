@@ -1,17 +1,19 @@
 // To prevent dublication and losing photos
 let current_photo_number = 0;
-//responding properties
-let audio_factor = 1000;
+
 // Url to the server
 let url = "/api/v1/image";
 
-// Creating SSU for voice
-const msg = new SpeechSynthesisUtterance();
+// Creating XMLHR to handle server requests and responses 
+const xhr = new XMLHttpRequest();
+
+// Creating SS to convert server responses to voice messages
+const synth = window.speechSynthesis;
 
 // Set constraints for the video stream
 let constraints = {
     video: {
-        facingMode: "environment"
+        facingMode: 'environment'
     },
     audio: false
 };
@@ -20,28 +22,32 @@ let constraints = {
 const cameraView = document.createElement('video');
 // Creating canvas element to store a specific frame -- image -- from the camera
 const canvas = document.createElement('canvas');
+// Creating Error Area div, anyerror will show up to the user in this div
+const messageArea = document.createElement('div');
+messageArea.style.paddingTop = '25%';
+document.body.appendChild(messageArea);
 
+cameraView.autoplay = true;
+cameraView.playsinline = true;
 
 // Access the device camera and stream to cameraView
 function camera_start() {
-    cameraView.playsinline = true;
-    cameraView.autoplay = true;
-
-    /* Setting up the constraint */
-    var facingMode = "environment"; // Can be 'user' or 'environment' to access back or front camera (NEAT!)
-    var constraints = {
-        audio: false,
-        video: {
-            facingMode: facingMode
-        }
-    };
-
-    /* Stream it to video element */
-    navigator.mediaDevices.getUserMedia(constraints).then(function success(stream) {
-        cameraView.srcObject = stream;
-    }).then(function () {
-        send_photo();
-    });
+    navigator.mediaDevices
+        .getUserMedia(constraints)
+        .then(function (stream) {
+            track = stream.getTracks()[0];
+            cameraView.srcObject = stream;
+        }).then(function () {
+            send_photo();
+        })
+        .catch(function (error) {
+            cameraErr = 'In order to this app to work:</br>' +
+                '- You need a device with a camera</br>' +
+                '- Allow us to use your camera</br>' +
+                'Please note: All photos sent to the server are automatically deleted';
+            console.error(error, cameraErr);
+            messageArea.innerHTML = cameraErr;
+        });
 }
 
 function send_photo() {
@@ -55,25 +61,46 @@ function send_photo() {
 
     // Check if the camera is still ON 
     if (data === "data:,") {
-        console.log("Turn on Your Camera");
+        console.log("Turning on Your Camera");
+        messageArea.innerHTML = "Turning on Your Camera";
         setTimeout(send_photo, 1000);
         return;
     }
 
-
-    // Sending a request to the server
-    $.post(url, JSON.stringify({
+    let rooaaFile = JSON.stringify({
         "data": data,
         "filename": (current_photo_number++).toString() + ".jpeg"
-    }), function (err, req, resp) {
-        let time_before_next_response;
-        // Check if AJAX call has completed.
-        msg.text = resp.responseText;
-        time_before_next_response = msg.text.trim().split(' ').length;
-        window.speechSynthesis.speak(msg);
+    });
 
-        setTimeout(send_photo, audio_factor * time_before_next_response);
-    })
+    // Sending a request to the server
+    xhr.open("POST", url);
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+    xhr.send(rooaaFile);
+    xhr.onreadystatechange = handle_server_response;
+}
+
+function handle_server_response() {
+    // Check if AJAX call has completed.
+    if (xhr.readyState === 4) {
+        // Completed not necessary meaning everything went okay :D 
+        if (xhr.status == 200) {
+            try {
+                const msg = new SpeechSynthesisUtterance(xhr.responseText);
+                messageArea.innerHTML = msg.text;
+                synth.speak(msg);
+                msg.onend = send_photo();
+            } catch (error) {
+                console.log(error.toString());
+                send_photo();
+            }
+        } else {
+            messageArea.innerHTML = "Server is offline, trying again..."
+            send_photo();
+        }
+    } else {
+        console.log("Waiting..");
+        messageArea.innerHTML = "Waiting for the server...";
+    }
 }
 
 camera_start();
