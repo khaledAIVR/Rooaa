@@ -11,5 +11,6 @@ An application to help the blind navigate their surroundings using voice generat
 - [Install Make](http://gnuwin32.sourceforge.net/packages/make.htm) if you're on Windows. OSX already has it installed. Linux will tell you how to install it (i.e., `sudo apt-get install make`)
 
 - Run `make run` and then navigate to `https://[YOUR IPV4 ADDRESS]:5000/`
+    - To get your `IPV4 Address` run `ipconfig` in cmd if you're on Windows or `ifconfig` if you're on Linux
 
 - Click `Advanced` then `proceed to unsafe`
