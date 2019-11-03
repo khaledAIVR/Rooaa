@@ -5,11 +5,10 @@ from threading import Lock
 from flask import current_app
 from flask.blueprints import Blueprint
 
-from rooaa.utils import yolo
+from rooaa.utils.yolo import YoloModel
 
 predict = Blueprint("predict", __name__)
 
-NET = yolo.load_model()
 LOCK = Lock()
 
 
@@ -19,18 +18,9 @@ def detect_object(filename):
 
     # Lock the model while in use
     with LOCK:
-        dimensions = yolo.construct_image_blob(image_path=image_path, model=NET)
-
-        detections, class_ids, centers = yolo.predict_objects(
-            dimensions=dimensions, model=NET
-        )
-
-    objects = yolo.get_detected_objects(
-        detections=detections,
-        dimensions=dimensions,
-        centers=centers,
-        class_ids=class_ids,
-    )
+        model = YoloModel(image_path=image_path)
+        model.predict_objects()
+        objects = model.get_detected_objects()
 
     os.remove(image_path)
 
