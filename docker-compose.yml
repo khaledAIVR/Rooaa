@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  web:
+    build: .
+    volumes:
+      - .:/usr/src/app
+    command: python3 manage.py -p
+    links:
+      - redis
+    depends_on:
+      - redis
+
+    ports:
+      - "5000:5000"
+  redis:
+    image: redis
+
+  celery:
+    build: .
+    volumes:
+      - .:/usr/src/app
+    links:
+      - redis
+    depends_on:
+      - redis
+    command: celery worker -A rooaa.extensions:celery -l info

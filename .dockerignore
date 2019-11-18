@@ -1,0 +1,6 @@
+linux-venv/
+venv/
+.git/
+__pycache__/
+redis-stable/
+.vscode/

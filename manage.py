@@ -16,4 +16,6 @@ if __name__ == "__main__":
     else:
         app = create_app(config="rooaa.settings.DevConfig")
 
-    app.run(host=app.config.get("HOST"), port=app.config.get("PORT"))
+    app.run(
+        host=app.config.get("HOST"), port=app.config.get("PORT"), ssl_context="adhoc"
+    )
