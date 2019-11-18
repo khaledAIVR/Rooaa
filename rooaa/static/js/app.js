@@ -85,10 +85,11 @@ function handle_server_response() {
         // Completed not necessary meaning everything went okay :D 
         if (xhr.status == 200) {
             try {
+                console.log(`${xhr.responseText}`)
                 const msg = new SpeechSynthesisUtterance(xhr.responseText);
                 messageArea.innerHTML = msg.text;
+                msg.onend = send_photo;
                 synth.speak(msg);
-                msg.onend = send_photo();
             } catch (error) {
                 console.log(error.toString());
                 send_photo();
