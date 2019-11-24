@@ -4,8 +4,10 @@ let current_photo_number = 0;
 // Url to the server
 let url = "/api/v1/image";
 
+
 // Creating XMLHR to handle server requests and responses 
 const xhr = new XMLHttpRequest();
+
 
 // Creating SS to convert server responses to voice messages
 const synth = window.speechSynthesis;
@@ -72,6 +74,7 @@ function send_photo() {
         "filename": (current_photo_number++).toString() + ".jpeg"
     });
 
+
     // Sending a request to the server
     xhr.open("POST", url);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
@@ -85,11 +88,10 @@ function handle_server_response() {
         // Completed not necessary meaning everything went okay :D 
         if (xhr.status == 200) {
             try {
-                console.log(`${xhr.responseText}`)
-                const msg = new SpeechSynthesisUtterance(xhr.responseText);
-                messageArea.innerHTML = msg.text;
-                msg.onend = send_photo;
-                synth.speak(msg);
+
+                status_url = JSON.parse(xhr.responseText)['location']
+                update_progress(status_url)
+
             } catch (error) {
                 console.log(error.toString());
                 send_photo();
@@ -102,6 +104,28 @@ function handle_server_response() {
         console.log("Waiting..");
         messageArea.innerHTML = "Waiting for the server...";
     }
+}
+
+function update_progress(status_url) {
+    $.getJSON(status_url, function (data) {
+        if (data['state'] != 'PENDING' && data['state'] != 'PREDICTING') {
+            if ('result' in data) {
+                const msg = new SpeechSynthesisUtterance(data["result"]);
+                messageArea.innerHTML = msg.text;
+                msg.onend = send_photo;
+                synth.speak(msg);
+            } else {
+                console.log("Something unexpected happened..")
+                send_photo()
+            }
+        } else {
+            messageArea.innerHTML = `${data["status"]}`
+            // rerun in 2 seconds
+            setTimeout(function () {
+                update_progress(status_url);
+            }, 500);
+        }
+    });
 }
 
 camera_start();
