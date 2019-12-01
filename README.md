@@ -14,3 +14,9 @@ An application to help the blind navigate their surroundings using voice generat
     - To get your `IPV4 Address` run `ipconfig` in cmd if you're on Windows or `ifconfig` if you're on Linux
 
 - Click `Advanced` then `proceed to unsafe`
+
+## TODOS:
+- Integerate DenseDepth model
+- Implement filteration system for objects detected
+- Remove camera app routes
+- Create unit tests
