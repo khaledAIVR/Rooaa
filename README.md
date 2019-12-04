@@ -20,3 +20,4 @@ An application to help the blind navigate their surroundings using voice generat
 - Implement filteration system for objects detected
 - Remove camera app routes
 - Create unit tests
+- Implement logging system
