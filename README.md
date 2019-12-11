@@ -22,3 +22,4 @@ An application to help the blind navigate their surroundings using voice generat
 - Create unit tests
 - Implement logging system
 - Write documentation and guides
+- Optimize and fix docker builds
