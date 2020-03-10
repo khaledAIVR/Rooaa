@@ -116,14 +116,14 @@ function update_progress(status_url) {
                 synth.speak(msg);
             } else {
                 console.log("Something unexpected happened..")
-                send_photo()
+                setTimeOut(send_photo, 1000)
             }
         } else {
             messageArea.innerHTML = `${data["status"]}`
             // rerun in 2 seconds
             setTimeout(function () {
                 update_progress(status_url);
-            }, 500);
+            }, 1000);
         }
     });
 }

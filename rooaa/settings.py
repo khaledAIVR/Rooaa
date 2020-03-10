@@ -8,6 +8,9 @@ class Config:
     # Directory to Darknet ml model
     DARKNET_PATH = pl.Path("rooaa/ml-model/darknet").absolute()
 
+    # Directory to DenseDepth ml model
+    DENSE_PATH = pl.Path("rooaa/ml-model/densedepth").absolute()
+
     # Celery Configurations
     CELERY_BROKER_URL = "redis://redis:6379/0"
     CELERY_RESULT_BACKEND = "redis://redis:6379/0"
