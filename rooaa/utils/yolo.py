@@ -19,17 +19,25 @@ def load_model():
 class YoloModel:
     """ Class containing Yolov3 ML model and helper methods. """
 
-    model = load_model()
+    model = None
+    labels = None
     layer_names = ["yolo_82", "yolo_94", "yolo_106"]
 
     def __init__(self, image_path):
         """ Loads model with given image. """
+        if YoloModel.model is None:
+            YoloModel.model = load_model()
+
+            # load the COCO class labels our YOLO model was trained on
+            coco_path = str(Config.DARKNET_PATH / pl.Path("coco/coco.names"))
+            with open(coco_path) as coco_names:
+                YoloModel.labels = coco_names.read().strip().split("\n")
+
         img = cv2.imread(image_path)
-
         self.dimensions = img.shape[:2]
-
-        blob = cv2.dnn.blobFromImage(img, 1 / 255.0, (416, 416), swapRB=True, crop=False)
-        self.model.setInput(blob)
+        blob = cv2.dnn.blobFromImage(
+            img, 1 / 255.0, (416, 416), swapRB=True, crop=False)
+        YoloModel.model.setInput(blob)
 
     def predict_objects(self):
         """ Initialize our lists of detecting bounding boxes and confidences.
@@ -37,12 +45,11 @@ class YoloModel:
 
         boxes = []
         confidences = []
-
         self.class_ids = []
         self.centers = []
 
         H, W = self.dimensions
-        layer_outputs = self.model.forward(YoloModel.layer_names)
+        layer_outputs = YoloModel.model.forward(YoloModel.layer_names)
 
         # loop over each of the layer outputs
         for output in layer_outputs:
@@ -82,29 +89,28 @@ class YoloModel:
 
     #! Needs re-work
     def get_detected_objects(self):
-        """ Returns string list of objects detected and
-        their basic positions if they exist, else returns None.
+        """ Returns classes, locations and centers lists of detected objects.
         """
+        classes = []
+        locations = []
+        center_axis = []
 
         if len(self.detections) > 0:
-            objects = []
             H, W = self.dimensions
-            # load the COCO class labels our YOLO model was trained on
-            coco_path = str(Config.DARKNET_PATH / pl.Path("coco/coco.names"))
-            with open(coco_path) as coco_names:
-                labels = coco_names.read().strip().split("\n")
 
             # loop over the indexes we are keeping
             for i in self.detections.flatten():
-                # find
-                center_x, _ = self.centers[i][0], self.centers[i][1]
+                center_x, center_y = self.centers[i]
 
                 if center_x <= W / 3:
-                    w_pos = "left"
+                    w_pos = "left "
                 elif center_x <= (W / 3 * 2):
-                    w_pos = "center"
+                    w_pos = "center "
                 else:
-                    w_pos = "right"
+                    w_pos = "right "
 
-                objects.append(f"{w_pos} {labels[self.class_ids[i]]}")
-            return objects
+                locations.append(w_pos)
+                classes.append(YoloModel.labels[self.class_ids[i]])
+                center_axis.append((center_x, center_y))
+
+            return classes, locations, center_axis
