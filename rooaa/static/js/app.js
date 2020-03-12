@@ -1,12 +1,20 @@
+
 // Url to the server
-let url = "/api/v1/image";
+const url = "/api/v1/image";
 
 // Creating XMLHR to handle server requests and responses 
 const xhr = new XMLHttpRequest();
 
 
 // web socket
-let socket = io.connect('http://' + document.domain + ':' + location.port + '/predict');
+const socket = io.connect('https://' + document.domain + ':' + location.port + '/predict');
+function uuidv4() {
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+  }
+  
+let image_name = uuidv4() + ".jpeg";
 
 // Creating SS to convert server responses to voice messages
 const synth = window.speechSynthesis;
@@ -70,6 +78,7 @@ function send_photo() {
 
     rooaaFile = JSON.stringify({
         "data": data,
+        "filename": image_name
     });
 
 
@@ -86,7 +95,7 @@ function handle_server_response() {
         // Completed not necessary meaning everything went okay :D 
         if (xhr.status == 200) {
             try {
-                socket.emit("prediction");
+                socket.emit("prediction", image_name);
 
             } catch (error) {
                 console.log(error.toString());

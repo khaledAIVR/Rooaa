@@ -17,5 +17,5 @@ if __name__ == "__main__":
         socketio, app = create_app(config="rooaa.settings.DevConfig")
 
     socketio.run(app,
-                 host=app.config.get("HOST"), port=app.config.get("PORT")
+                 host=app.config.get("HOST"), port=app.config.get("PORT"), ssl_context="adhoc"
                  )

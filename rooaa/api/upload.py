@@ -2,7 +2,6 @@ from flask import request, abort, current_app
 from flask.blueprints import Blueprint
 from werkzeug.exceptions import BadRequest
 
-from rooaa import get_client_ip
 from rooaa.utils import image
 
 upload = Blueprint("upload", __name__)
@@ -20,10 +19,11 @@ def upload_image():
             description="Didn't receive JSON object or received incorrectly formatted JSON.",
         )
 
-    # Required keys for the uploaded image
+   # Required keys for the uploaded image
+    filename = image_json.get("filename", None)
     data = image_json.get("data", None)
 
-    if data is None:
+    if filename is None or data is None:
         abort(status=400, description="Missing required keys")
 
     # Decoding image
@@ -34,10 +34,10 @@ def upload_image():
     # Saving image temporarily on system
     try:
         image.save_image(
-            path=current_app.config["UPLOAD_PATH"], binary_data=img, filename=get_client_ip())
+            path=current_app.config["UPLOAD_PATH"], binary_data=img, filename=filename
+        )
         image.save_image(
-            path=current_app.config["UPLOAD_PATH"], binary_data=img, filename=get_client_ip(
-            )+"-yolo"
+            path=current_app.config["UPLOAD_PATH"], binary_data=img, filename=filename+"-yolo"
         )
     except Exception as err:
         print(f"{err}")

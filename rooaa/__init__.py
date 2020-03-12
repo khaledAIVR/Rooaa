@@ -8,15 +8,6 @@ def bad_request(err):
     return jsonify(error=str(err)), 400
 
 
-def get_client_ip():
-    """ Returns Client's IP as a JPEG file name i.e: 192.168.1.1.jpeg"""
-    image_ext = ".jpeg"
-    if request.environ.get('HTTP_X_FORWARDED_FOR') is None:
-        return request.environ['REMOTE_ADDR']+image_ext
-    else:
-        return request.environ['HTTP_X_FORWARDED_FOR']+image_ext
-
-
 def create_app(config="rooaa.settings.ProdConfig"):
     """ Creates configured Flask app """
     app = Flask(__name__)

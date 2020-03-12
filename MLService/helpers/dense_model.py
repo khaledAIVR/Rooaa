@@ -88,6 +88,8 @@ class DenseModel:
     def __init__(self, image_path):
         """ Loads model with given image. """
         self.image_path = image_path
+        img = cv2.imread(image_path)
+        self.img_h, self.img_w, _ = img.shape
 
     def dense_predict(self):
 
@@ -97,7 +99,7 @@ class DenseModel:
 
         save_images(self.image_path, outputs)
 
-        resize(self.image_path)
+        resize(self.image_path, self.img_w, self.img_h)
 
 
 def DepthNorm(x, maxDepth):
@@ -181,12 +183,10 @@ def save_images(filename, outputs, inputs=None, gt=None, is_colormap=True, is_re
     im.save(filename)
 
 
-def resize(path):
+def resize(path, width, height):
     """Takes a jpg, resize it to 480*640 png image"""
     imageFile = path
     img = cv2.imread(imageFile)
-    width = 480
-    height = 640
     dim = (width, height)
     img = cv2.resize(img, dim)
     cv2.imwrite(path, img)

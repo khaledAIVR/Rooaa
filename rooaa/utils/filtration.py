@@ -73,7 +73,8 @@ def sort_by_most_dangerous(dense_path, classes, locations, centers):
 
 def depth_approx(dense_path, centers):
     img = cv2.imread(dense_path)
-    return [img[x, y][0] for x, y in centers]
+    return [img[y, x][0] for x, y in centers]
+
 
 
 def most_dangerous(arr):

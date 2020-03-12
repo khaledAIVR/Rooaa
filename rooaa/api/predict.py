@@ -7,7 +7,6 @@ from flask.blueprints import Blueprint
 from flask_socketio import emit
 
 from rooaa.utils.filtration import filter_results
-from rooaa import get_client_ip
 
 predict = Blueprint("predict", __name__)
 
@@ -26,14 +25,14 @@ def send_predictions():
     return "Prediction sent"
 
 
-def detect_objects():
+def detect_objects(filename):
     """Spawns process to call MLService with input image name"""
     dense_path = str(
-        current_app.config["UPLOAD_PATH"] / pl.Path(get_client_ip()))
+        current_app.config["UPLOAD_PATH"] / pl.Path(filename))
     yolo_path = dense_path + "-yolo"
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.submit(mlservice_predict, yolo_path,
-                        dense_path, request.sid)
+                         dense_path, request.sid)
 
 
 def mlservice_predict(yolo_path, dense_path, socket_id):
@@ -50,7 +49,7 @@ def mlservice_predict(yolo_path, dense_path, socket_id):
         }
         for _ in concurrent.futures.as_completed(predictions):
             pass
-    requests.post("http://web:5000/api/v1/prediction",
+    requests.post("https://localhost:5000/api/v1/prediction",
                   {"dense_path": dense_path,
                    "yolo_path": yolo_path,
-                   "socket_id": socket_id})
+                   "socket_id": socket_id},verify=False)
