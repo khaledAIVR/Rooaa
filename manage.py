@@ -12,10 +12,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.prod:
-        app = create_app()
+        socketio, app = create_app()
     else:
-        app = create_app(config="rooaa.settings.DevConfig")
+        socketio, app = create_app(config="rooaa.settings.DevConfig")
 
-    app.run(
-        host=app.config.get("HOST"), port=app.config.get("PORT"), ssl_context="adhoc"
-    )
+    socketio.run(app,
+                 host=app.config.get("HOST"), port=app.config.get("PORT")
+                 )

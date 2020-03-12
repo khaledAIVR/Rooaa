@@ -1,5 +1,5 @@
 # Installing darknet model
-cd rooaa/ml-model/darknet
+cd mlservice/ml-model/darknet
 curl https://pjreddie.com/media/files/yolov3.weights --output yolov3.weights
 
 # Installing densedepth model

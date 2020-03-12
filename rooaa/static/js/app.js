@@ -1,13 +1,12 @@
-// To prevent dublication and losing photos
-let current_photo_number = 0;
-
 // Url to the server
 let url = "/api/v1/image";
-
 
 // Creating XMLHR to handle server requests and responses 
 const xhr = new XMLHttpRequest();
 
+
+// web socket
+let socket = io.connect('http://' + document.domain + ':' + location.port + '/predict');
 
 // Creating SS to convert server responses to voice messages
 const synth = window.speechSynthesis;
@@ -25,9 +24,8 @@ const cameraView = document.createElement('video');
 // Creating canvas element to store a specific frame -- image -- from the camera
 const canvas = document.createElement('canvas');
 // Creating Error Area div, anyerror will show up to the user in this div
-const messageArea = document.createElement('div');
+const messageArea = document.querySelector('#messageArea');
 messageArea.style.paddingTop = '25%';
-document.body.appendChild(messageArea);
 
 cameraView.autoplay = true;
 cameraView.playsinline = true;
@@ -69,9 +67,9 @@ function send_photo() {
         return;
     }
 
-    let rooaaFile = JSON.stringify({
+
+    rooaaFile = JSON.stringify({
         "data": data,
-        "filename": (current_photo_number++).toString() + ".jpeg"
     });
 
 
@@ -88,17 +86,15 @@ function handle_server_response() {
         // Completed not necessary meaning everything went okay :D 
         if (xhr.status == 200) {
             try {
-
-                status_url = JSON.parse(xhr.responseText)['location']
-                update_progress(status_url)
+                socket.emit("prediction");
 
             } catch (error) {
                 console.log(error.toString());
-                send_photo();
+                setTimeOut(send_photo, 1000);
             }
         } else {
             messageArea.innerHTML = "Server is offline, trying again..."
-            send_photo();
+            setTimeOut(send_photo, 1000);
         }
     } else {
         console.log("Waiting..");
@@ -106,26 +102,11 @@ function handle_server_response() {
     }
 }
 
-function update_progress(status_url) {
-    $.getJSON(status_url, function (data) {
-        if (data['state'] != 'PENDING' && data['state'] != 'PREDICTING') {
-            if ('result' in data) {
-                const msg = new SpeechSynthesisUtterance(data["result"]);
-                messageArea.innerHTML = msg.text;
-                msg.onend = send_photo;
-                synth.speak(msg);
-            } else {
-                console.log("Something unexpected happened..")
-                setTimeOut(send_photo, 1000)
-            }
-        } else {
-            messageArea.innerHTML = `${data["status"]}`
-            // rerun in 2 seconds
-            setTimeout(function () {
-                update_progress(status_url);
-            }, 1000);
-        }
-    });
-}
+socket.on('result', function (predictions) {
+    const msg = new SpeechSynthesisUtterance(predictions);
+    messageArea.innerHTML = msg.text;
+    msg.onend = send_photo;
+    synth.speak(msg);
+});
 
 camera_start();

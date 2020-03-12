@@ -1,10 +1,20 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
+from flask_socketio import SocketIO
 
 
 def bad_request(err):
     """ 400 BadRequest error handler."""
     return jsonify(error=str(err)), 400
+
+
+def get_client_ip():
+    """ Returns Client's IP as a JPEG file name i.e: 192.168.1.1.jpeg"""
+    image_ext = ".jpeg"
+    if request.environ.get('HTTP_X_FORWARDED_FOR') is None:
+        return request.environ['REMOTE_ADDR']+image_ext
+    else:
+        return request.environ['HTTP_X_FORWARDED_FOR']+image_ext
 
 
 def create_app(config="rooaa.settings.ProdConfig"):
@@ -14,7 +24,7 @@ def create_app(config="rooaa.settings.ProdConfig"):
     # Load given settings
     app.config.from_object(obj=config)
 
-    from rooaa.api.predict import predict
+    from rooaa.api.predict import predict, detect_objects
     from rooaa.api.upload import upload
     from rooaa.api.camera import camera
 
@@ -24,6 +34,7 @@ def create_app(config="rooaa.settings.ProdConfig"):
 
     # Register prediction routes
     app.register_blueprint(blueprint=predict)
+
     # Register image upload routes
     app.register_blueprint(blueprint=upload)
 
@@ -33,4 +44,7 @@ def create_app(config="rooaa.settings.ProdConfig"):
     # Register error handlers
     app.register_error_handler(code_or_exception=400, f=bad_request)
 
-    return app
+    socketio = SocketIO(app)
+    socketio.on_event('prediction', detect_objects, namespace='/predict')
+
+    return socketio, app

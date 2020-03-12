@@ -1,7 +1,8 @@
-from flask import request, abort, current_app, redirect, url_for
+from flask import request, abort, current_app
 from flask.blueprints import Blueprint
 from werkzeug.exceptions import BadRequest
 
+from rooaa import get_client_ip
 from rooaa.utils import image
 
 upload = Blueprint("upload", __name__)
@@ -20,10 +21,9 @@ def upload_image():
         )
 
     # Required keys for the uploaded image
-    filename = image_json.get("filename", None)
     data = image_json.get("data", None)
 
-    if filename is None or data is None:
+    if data is None:
         abort(status=400, description="Missing required keys")
 
     # Decoding image
@@ -34,12 +34,13 @@ def upload_image():
     # Saving image temporarily on system
     try:
         image.save_image(
-            path=current_app.config["UPLOAD_PATH"], binary_data=img, filename=filename
+            path=current_app.config["UPLOAD_PATH"], binary_data=img, filename=get_client_ip())
+        image.save_image(
+            path=current_app.config["UPLOAD_PATH"], binary_data=img, filename=get_client_ip(
+            )+"-yolo"
         )
     except Exception as err:
         print(f"{err}")
         abort(status=500)
 
-    return redirect(
-        url_for(endpoint="predict.detect_object", filename=filename), code=303
-    )
+    return "Success"

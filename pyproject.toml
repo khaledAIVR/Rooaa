@@ -7,8 +7,6 @@ authors = ["Abdelrahman Kandil <abdelrahmankandil@hotmail.com>"]
 [tool.poetry.dependencies]
 python = ">=3.7"
 flask = "^1.1.1"
-celery = "^4.4.1"
-redis = "^3.4.1"
 flask_cors = "^3.0.8"
 pillow = "^7.0.0"
 pyopenssl = "^19.1.0"
@@ -17,6 +15,8 @@ keras = "2.2.5"
 tensorflow = "1.14.0"
 matplotlib = "^3.2.0"
 scikit-image = "^0.16.2"
+requests = "^2.23.0"
+flask-socketio = "^4.2.1"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.7.9"

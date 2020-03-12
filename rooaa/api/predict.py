@@ -1,76 +1,56 @@
-import pickle
 import pathlib as pl
+import concurrent.futures
 
-from flask import current_app, jsonify, url_for
+import requests
+from flask import current_app, request
 from flask.blueprints import Blueprint
+from flask_socketio import emit
 
-from .tasks import dense_prediction, yolo_prediction, remove_file
-from rooaa.utils.filtration import whole_filtration, depth_approx
+from rooaa.utils.filtration import filter_results
+from rooaa import get_client_ip
 
 predict = Blueprint("predict", __name__)
 
 
-@predict.route("/api/v1/predict/<filename>")
-def detect_object(filename):
+@predict.route("/api/v1/prediction", methods=["POST"])
+def send_predictions():
+    """Getting filtered predictions and sending the results """
+    yolo_path = request.form.get("yolo_path")
+    dense_path = request.form.get("dense_path")
+    pkl_path = yolo_path + "-pkl"
 
-    image_path = str(current_app.config["UPLOAD_PATH"] / pl.Path(filename))
+    socket_id = request.form.get("socket_id")
 
-    try:
-        # Expires in 2 seconds
-        yolo_prediction.delay(image_path)
-        prediction_task = dense_prediction.apply_async(
-            args=[image_path], expires=9, retry=False
-        )
+    filtered_text = filter_results(pkl_path=pkl_path, dense_path=dense_path)
+    emit("result", filtered_text, namespace="/predict", room=socket_id)
+    return "Prediction sent"
 
-    except prediction_task.OperationalError:
-        return jsonify({"error": "Connection Lost"}), 500
 
-    return jsonify(
-        {
-            "location": url_for(
-                endpoint="predict.prediction_status", prediction_id=prediction_task.id
-            )
+def detect_objects():
+    """Spawns process to call MLService with input image name"""
+    dense_path = str(
+        current_app.config["UPLOAD_PATH"] / pl.Path(get_client_ip()))
+    yolo_path = dense_path + "-yolo"
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        executor.submit(mlservice_predict, yolo_path,
+                        dense_path, request.sid)
+
+
+def mlservice_predict(yolo_path, dense_path, socket_id):
+    """Calls and waits for MLService prediction results
+     and calls prediction route to send results """
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        predictions = {
+            executor.submit(requests.post,
+                            "http://yolo_service:5001/yolo/predict",
+                            {"image_path": yolo_path}),
+            executor.submit(requests.post,
+                            "http://dense_service:5002/dense/predict",
+                            {"image_path": dense_path})
         }
-    )
-
-
-@predict.route("/api/v1/predict/status/<prediction_id>")
-def prediction_status(prediction_id):
-    prediction = dense_prediction.AsyncResult(prediction_id)
-    state = prediction.state
-
-    if prediction.failed():
-        response = {"state": state, "status": prediction.info}
-
-    elif state == "PENDING":
-        response = {"state": state, "status": "Prediction didn't start yet"}
-
-    else:
-        response = {"state": state, "status": f"{state}..."}
-        if prediction.result == "expired":
-            response["state"] = prediction.result
-
-        elif prediction.result != "unavailable":
-            image_path = prediction.result
-            pkl_path = f"{image_path}-pkl"
-
-            try:
-                with open(pkl_path, "rb") as f:
-                    yolo_data = pickle.load(f)
-                    text = "Nothing"
-
-                    if yolo_data is not None:
-                        classes, locations, centers = yolo_data
-                        depthes = depth_approx(image_path, centers)
-                        text = whole_filtration(classes, depthes, locations)
-
-                    response["result"] = text
-                    response["status"] = "Finished"
-            except FileNotFoundError:
-                response = {"state": "EXPIRED",
-                            "status": f"Waiting on yolo.."}
-            else:
-                remove_file.delay(image_path)
-                remove_file.delay(pkl_path)
-
-    return jsonify(response), 200
+        for _ in concurrent.futures.as_completed(predictions):
+            pass
+    requests.post("http://web:5000/api/v1/prediction",
+                  {"dense_path": dense_path,
+                   "yolo_path": yolo_path,
+                   "socket_id": socket_id})

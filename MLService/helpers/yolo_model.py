@@ -3,7 +3,7 @@ import pathlib as pl
 import cv2
 import numpy as np
 
-from rooaa.settings import Config
+from settings import Config
 
 
 def load_model():
@@ -19,15 +19,13 @@ def load_model():
 class YoloModel:
     """ Class containing Yolov3 ML model and helper methods. """
 
-    model = None
+    model = load_model()
     labels = None
     layer_names = ["yolo_82", "yolo_94", "yolo_106"]
 
     def __init__(self, image_path):
         """ Loads model with given image. """
-        if YoloModel.model is None:
-            YoloModel.model = load_model()
-
+        if YoloModel.labels is None:
             # load the COCO class labels our YOLO model was trained on
             coco_path = str(Config.DARKNET_PATH / pl.Path("coco/coco.names"))
             with open(coco_path) as coco_names:
@@ -103,11 +101,11 @@ class YoloModel:
                 center_x, center_y = self.centers[i]
 
                 if center_x <= W / 3:
-                    w_pos = "left "
+                    w_pos = "left"
                 elif center_x <= (W / 3 * 2):
-                    w_pos = "center "
+                    w_pos = "center"
                 else:
-                    w_pos = "right "
+                    w_pos = "right"
 
                 locations.append(w_pos)
                 classes.append(YoloModel.labels[self.class_ids[i]])

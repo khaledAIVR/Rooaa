@@ -11,7 +11,7 @@ from keras.engine.topology import InputSpec, Layer
 from keras.models import load_model
 from PIL import Image
 
-from rooaa.settings import Config
+from settings import Config
 
 
 class BilinearUpSampling2D(Layer):
@@ -83,12 +83,10 @@ def dense_load_model():
 
 class DenseModel:
     """ Class containing DenseDepth ML model and helper methods. """
-    model = None
+    model = dense_load_model()
 
     def __init__(self, image_path):
         """ Loads model with given image. """
-        if DenseModel.model is None:
-            DenseModel.model = dense_load_model()
         self.image_path = image_path
 
     def dense_predict(self):
