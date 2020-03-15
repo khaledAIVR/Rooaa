@@ -1,6 +1,7 @@
 import glob
 import os
 import pathlib as pl
+from threading import Lock
 
 import cv2
 import keras.backend as K
@@ -58,8 +59,8 @@ class BilinearUpSampling2D(Layer):
 
     def get_config(self):
         config = {'size': self.size, 'data_format': self.data_format}
-        base_config = super(BilinearUpSampling2D, self).get_config()
-        return dict(list(base_config.items()) + list(config.items()))
+        config.update(super(BilinearUpSampling2D, self).get_config())
+        return config
 
 
 def dense_load_model():
@@ -74,6 +75,7 @@ def dense_load_model():
 
     print('Loading model...')
     K.clear_session()
+
     # Load model into GPU / CPU
     model = load_model(Config.DENSE_PATH / pl.Path("nyu.h5"),
                        custom_objects=custom_objects, compile=False)
@@ -84,6 +86,7 @@ def dense_load_model():
 class DenseModel:
     """ Class containing DenseDepth ML model and helper methods. """
     model = dense_load_model()
+    model_lock = Lock()
 
     def __init__(self, image_path):
         """ Loads model with given image. """
@@ -94,35 +97,30 @@ class DenseModel:
     def dense_predict(self):
 
         inputs = load_images(glob.glob(self.image_path))
-
-        outputs = predict(DenseModel.model, inputs)
-
+        outputs = predict(inputs)
         save_images(self.image_path, outputs)
-
         resize(self.image_path, self.img_w, self.img_h)
 
 
-def DepthNorm(x, maxDepth):
-    return maxDepth / x
-
-
-def predict(model, images, minDepth=10, maxDepth=1000, batch_size=2):
+def predict(images, minDepth=10, maxDepth=1000, batch_size=2):
     # Support multiple RGBs, one RGB image, even grayscale
     if len(images.shape) < 3:
         images = np.stack((images, images, images), axis=2)
     if len(images.shape) < 4:
         images = images.reshape(
             (1, images.shape[0], images.shape[1], images.shape[2]))
+
     # Compute predictions
-    predictions = model.predict(images, batch_size=batch_size)
+    with DenseModel.model_lock:
+        predictions = DenseModel.model.predict(images, batch_size=batch_size)
     # Put in expected range
-    return np.clip(DepthNorm(predictions, maxDepth=1000), minDepth, maxDepth) / maxDepth
+    return np.clip(maxDepth / predictions, minDepth, maxDepth) / maxDepth
 
 
 def load_images(image_files):
     loaded_images = []
-    for file in image_files:
-        x = np.clip(np.asarray(Image.open(file), dtype=float) / 255, 0, 1)
+    for img in image_files:
+        x = np.clip(np.asarray(Image.open(img), dtype=float) / 255, 0, 1)
         loaded_images.append(x)
     return np.stack(loaded_images, axis=0)
 
@@ -130,8 +128,9 @@ def load_images(image_files):
 def to_multichannel(i):
     if i.shape[2] == 3:
         return i
-    i = i[:, :, 0]
-    return np.stack((i, i, i), axis=2)
+    else:
+        i = i[:, :, 0]
+        return np.stack((i, i, i), axis=2)
 
 
 def display_images(outputs, inputs=None, gt=None, is_colormap=True, is_rescale=True):
@@ -184,7 +183,7 @@ def save_images(filename, outputs, inputs=None, gt=None, is_colormap=True, is_re
 
 
 def resize(path, width, height):
-    """Takes a jpg, resize it to 480*640 png image"""
+    """Takes an image and resizes it with given width & height"""
     imageFile = path
     img = cv2.imread(imageFile)
     dim = (width, height)

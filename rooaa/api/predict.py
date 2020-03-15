@@ -2,6 +2,7 @@ import pathlib as pl
 import concurrent.futures
 
 import requests
+
 from flask import current_app, request
 from flask.blueprints import Blueprint
 from flask_socketio import emit
@@ -16,9 +17,8 @@ def send_predictions():
     """Getting filtered predictions and sending the results """
     yolo_path = request.form.get("yolo_path")
     dense_path = request.form.get("dense_path")
-    pkl_path = yolo_path + "-pkl"
-
     socket_id = request.form.get("socket_id")
+    pkl_path = yolo_path + "-pkl"
 
     filtered_text = filter_results(pkl_path=pkl_path, dense_path=dense_path)
     emit("result", filtered_text, namespace="/predict", room=socket_id)
@@ -32,10 +32,10 @@ def detect_objects(filename):
     yolo_path = dense_path + "-yolo"
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.submit(mlservice_predict, yolo_path,
-                         dense_path, request.sid)
+                        dense_path)
 
 
-def mlservice_predict(yolo_path, dense_path, socket_id):
+def mlservice_predict(yolo_path, dense_path):
     """Calls and waits for MLService prediction results
      and calls prediction route to send results """
     with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -52,4 +52,4 @@ def mlservice_predict(yolo_path, dense_path, socket_id):
     requests.post("https://localhost:5000/api/v1/prediction",
                   {"dense_path": dense_path,
                    "yolo_path": yolo_path,
-                   "socket_id": socket_id},verify=False)
+                   "socket_id": request.sid}, verify=False)

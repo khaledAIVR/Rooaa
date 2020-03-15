@@ -1,20 +1,15 @@
-from threading import Lock
-
 from flask import Flask, request
 
 from helpers.dense_model import DenseModel
 
 dense = Flask(__name__)
 
-LOCK = Lock()
-
 
 @dense.route("/dense/predict", methods=["POST"])
 def predict_objects():
     image_path = request.form.get("image_path")
     dense_model = DenseModel(image_path=image_path)
-    with LOCK:
-        dense_model.dense_predict()
+    dense_model.dense_predict()
     return image_path
 
 
