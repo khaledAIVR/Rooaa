@@ -1,5 +1,6 @@
 # Rooaa
-An application to help the blind navigate their surroundings using voice generated messages based on detected objects and their threat level
+
+An experimental web application that aims to help the blind navigate their surroundings using voice generated messages based on detected objects and their distance using only the mobile camera / web cam.
 
 ## Getting Started
 - Clone the repo locally
