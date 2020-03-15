@@ -1,11 +1,20 @@
-// To prevent dublication and losing photos
-let current_photo_number = 0;
 
 // Url to the server
-let url = "/api/v1/image";
+const url = "/api/v1/image";
 
 // Creating XMLHR to handle server requests and responses 
 const xhr = new XMLHttpRequest();
+
+
+// web socket
+const socket = io.connect('https://' + document.domain + ':' + location.port + '/predict');
+function uuidv4() {
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+  }
+  
+let image_name = uuidv4() + ".jpeg";
 
 // Creating SS to convert server responses to voice messages
 const synth = window.speechSynthesis;
@@ -23,9 +32,8 @@ const cameraView = document.createElement('video');
 // Creating canvas element to store a specific frame -- image -- from the camera
 const canvas = document.createElement('canvas');
 // Creating Error Area div, anyerror will show up to the user in this div
-const messageArea = document.createElement('div');
+const messageArea = document.querySelector('#messageArea');
 messageArea.style.paddingTop = '25%';
-document.body.appendChild(messageArea);
 
 cameraView.autoplay = true;
 cameraView.playsinline = true;
@@ -67,10 +75,12 @@ function send_photo() {
         return;
     }
 
-    let rooaaFile = JSON.stringify({
+
+    rooaaFile = JSON.stringify({
         "data": data,
-        "filename": (current_photo_number++).toString() + ".jpeg"
+        "filename": image_name
     });
+
 
     // Sending a request to the server
     xhr.open("POST", url);
@@ -85,23 +95,27 @@ function handle_server_response() {
         // Completed not necessary meaning everything went okay :D 
         if (xhr.status == 200) {
             try {
-                console.log(`${xhr.responseText}`)
-                const msg = new SpeechSynthesisUtterance(xhr.responseText);
-                messageArea.innerHTML = msg.text;
-                msg.onend = send_photo;
-                synth.speak(msg);
+                socket.emit("prediction", image_name);
+
             } catch (error) {
                 console.log(error.toString());
-                send_photo();
+                setTimeOut(send_photo, 1000);
             }
         } else {
             messageArea.innerHTML = "Server is offline, trying again..."
-            send_photo();
+            setTimeOut(send_photo, 1000);
         }
     } else {
         console.log("Waiting..");
         messageArea.innerHTML = "Waiting for the server...";
     }
 }
+
+socket.on('result', function (predictions) {
+    const msg = new SpeechSynthesisUtterance(predictions);
+    messageArea.innerHTML = msg.text;
+    msg.onend = send_photo;
+    synth.speak(msg);
+});
 
 camera_start();

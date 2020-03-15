@@ -1,4 +1,4 @@
-from flask import request, abort, current_app, redirect, url_for
+from flask import request, abort, current_app
 from flask.blueprints import Blueprint
 from werkzeug.exceptions import BadRequest
 
@@ -19,7 +19,7 @@ def upload_image():
             description="Didn't receive JSON object or received incorrectly formatted JSON.",
         )
 
-    # Required keys for the uploaded image
+   # Required keys for the uploaded image
     filename = image_json.get("filename", None)
     data = image_json.get("data", None)
 
@@ -36,10 +36,11 @@ def upload_image():
         image.save_image(
             path=current_app.config["UPLOAD_PATH"], binary_data=img, filename=filename
         )
+        image.save_image(
+            path=current_app.config["UPLOAD_PATH"], binary_data=img, filename=filename+"-yolo"
+        )
     except Exception as err:
         print(f"{err}")
         abort(status=500)
 
-    return redirect(
-        url_for(endpoint="predict.detect_object", filename=filename), code=303
-    )
+    return "Success"

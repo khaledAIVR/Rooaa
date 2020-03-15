@@ -1,5 +1,6 @@
 # editor
 .vscode
+.todo
 
 # local development settings
 rooaa/local_settings.py

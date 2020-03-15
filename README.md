@@ -1,5 +1,6 @@
 # Rooaa
-An application to help the blind navigate their surroundings using voice generated messages based on detected objects and their threat level
+
+An experimental web application that aims to help the blind navigate their surroundings using voice generated messages based on detected objects and their distance using only the mobile camera / web cam.
 
 ## Getting Started
 - Clone the repo locally
@@ -7,7 +8,7 @@ An application to help the blind navigate their surroundings using voice generat
     - [Docker Desktop for Mac and Windows](https://www.docker.com/products/docker-desktop)
     - [Docker Engine for Linux](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
     - Additional step for Linux: install [docker compose](https://docs.docker.com/compose/install/#install-compose) as well.
-
+- Download model weights by running `download_weights.sh`
 - [Install Make](http://gnuwin32.sourceforge.net/packages/make.htm) if you're on Windows. OSX already has it installed. Linux will tell you how to install it (i.e., `sudo apt-get install make`)
 
 - Run `make run` and then navigate to `https://[YOUR IPV4 ADDRESS]:5000/`
@@ -15,11 +16,6 @@ An application to help the blind navigate their surroundings using voice generat
 
 - Click `Advanced` then `proceed to unsafe`
 
-## TODOS:
-- Integerate DenseDepth model
-- Implement filteration system for objects detected
-- Remove camera app routes
-- Create unit tests
-- Implement logging system
-- Write documentation and guides
-- Optimize and fix docker builds
+## Acknowledgements:
+- [DenseDepth](https://github.com/ialhashim/DenseDepth)
+- [YoloV3](https://pjreddie.com/darknet/yolo/) 

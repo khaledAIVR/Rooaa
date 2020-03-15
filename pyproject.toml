@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "rooaa"
+version = "0.1.0"
+description = ""
+authors = ["Abdelrahman Kandil <abdelrahmankandil@hotmail.com>"]
+
+[tool.poetry.dependencies]
+python = ">=3.7"
+flask = "^1.1.1"
+flask_cors = "^3.0.8"
+pillow = "^7.0.0"
+pyopenssl = "^19.1.0"
+opencv-python = "^4.2.0"
+keras = "2.2.5"
+tensorflow = "1.14.0"
+matplotlib = "^3.2.0"
+scikit-image = "^0.16.2"
+requests = "^2.23.0"
+flask-socketio = "^4.2.1"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^3.7.9"
+autopep8 = "^1.5"
+
+[build-system]
+requires = ["poetry>=1.0.4"]
+build-backend = "poetry.masonry.api"
