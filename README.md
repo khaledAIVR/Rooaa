@@ -15,8 +15,6 @@ An application to help the blind navigate their surroundings using voice generat
 
 - Click `Advanced` then `proceed to unsafe`
 
-## TODOS:
-- Integerate DenseDepth model
-- Implement filteration system for objects detected
-- Remove camera app routes
-- Create unit tests
+## Acknowledgements:
+- [DenseDepth](https://github.com/ialhashim/DenseDepth)
+- [YoloV3](https://pjreddie.com/darknet/yolo/) 
