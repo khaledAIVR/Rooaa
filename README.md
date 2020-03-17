@@ -14,7 +14,8 @@ An experimental web application that aims to help the blind navigate their surro
 - Run `make run` and then navigate to `https://[YOUR IPV4 ADDRESS]:5000/`
     - To get your `IPV4 Address` run `ipconfig` in cmd if you're on Windows or `ifconfig` if you're on Linux
 
-- Click `Advanced` then `proceed to unsafe`
+- Click `Advanced` then `proceed to unsafe`  
+*Note: Dense service has quite a high inital loading time (60 seconds) as we are currently running on the CPU but it should function normally after this*
 
 ## Acknowledgements:
 - [DenseDepth](https://github.com/ialhashim/DenseDepth)
