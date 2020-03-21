@@ -1,6 +1,6 @@
 # Rooaa
 [![Generic badge](https://img.shields.io/badge/Build-Passing-<COLOR>.svg)](https://shields.io/)
-[![Maintenance](https://img.shields.io/badge/status-experimental-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
+[![Maintenance](https://img.shields.io/badge/status-experimental-green.svg)](https://github.com/Kandeel4411/Rooaa/pulse)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 
 An experimental web application that aims to help the blind navigate their surroundings using voice generated messages based on detected objects and their distance using only the mobile camera / web cam.
