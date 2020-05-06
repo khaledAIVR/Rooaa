@@ -6,6 +6,7 @@
 An experimental web application that aims to help the blind navigate their surroundings using voice generated messages based on detected objects and their distance using only the mobile camera / web cam.
 
 ## Getting Started
+- Take a look into the colab notebook in order to have a better understanding of the project.
 - Clone the repo locally
 - Install Docker and ensure it is running
     - [Docker Desktop for Mac and Windows](https://www.docker.com/products/docker-desktop)
