@@ -1,5 +1,5 @@
 # Rooaa
-[![Generic badge](https://img.shields.io/badge/Build-Passing-<COLOR>.svg)](https://shields.io/)
+[![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/khaledAIVR/Rooaa/blob/master/LICENSE)
 [![Maintenance](https://img.shields.io/badge/status-experimental-green.svg)](https://github.com/Kandeel4411/Rooaa/pulse)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 
