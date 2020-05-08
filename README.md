@@ -3,10 +3,12 @@
 [![Maintenance](https://img.shields.io/badge/status-experimental-green.svg)](https://github.com/Kandeel4411/Rooaa/pulse)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 
-An experimental web application that aims to help the blind navigate their surroundings using voice generated messages based on detected objects and their distance using only the mobile camera / web cam.
+An experimental web application that aims to help the blind navigate their surroundings using voice generated messages based on detected objects and their distance using only the mobile camera / web cam.  
+  
+Take a look into the Google Colab Notebook in the repo for a quick run in order to have a better understanding of the project.
 
 ## Getting Started
-- Take a look into the colab notebook in order to have a better understanding of the project.
+
 - Clone the repo locally
 - Install Docker and ensure it is running
     - [Docker Desktop for Mac and Windows](https://www.docker.com/products/docker-desktop)
