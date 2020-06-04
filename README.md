@@ -23,6 +23,9 @@ Take a look into the Google Colab Notebook in the repo for a quick run in order 
 - Click `Advanced` then `proceed to unsafe` The warning is because we are using a dummy SSL context in order to use `https` to be able to access the camera feed.  
 *Note: Dense service has quite a high inital loading time (60 seconds) as we are currently running on the CPU but it should function normally after this*
 
+## Demo:
+- https://www.youtube.com/watch?v=59n85nJyu6g
+
 ## Acknowledgements:
 - [DenseDepth](https://github.com/ialhashim/DenseDepth)
 - [YoloV3](https://pjreddie.com/darknet/yolo/) 
