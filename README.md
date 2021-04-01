@@ -10,7 +10,7 @@ Take a look into the Google Colab Notebook in the repo for a quick run in order 
 
 ## Getting Started
 
-- Clone the repo to your local machine 
+- Clone the repo to your local machine. 
 - Install Docker and ensure it is running
     - [Docker Desktop for Mac and Windows](https://www.docker.com/products/docker-desktop)
     - [Docker Engine for Linux](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
