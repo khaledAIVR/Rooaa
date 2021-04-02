@@ -5,7 +5,7 @@
 
 An experimental web application that aims to help the blind navigate their surroundings using voice generated messages based on detected objects and their distance using only the mobile camera / web cam.  
   
-Take a look into the Google Colab Notebook in the repo for a quick run in order to have a better understanding of the project 
+Take a look into the Google Colab Notebook in the repo for a quick run in order to have a better understanding of the project :
 - [Colab Notebook](https://colab.research.google.com/drive/1jzVcoJE05fC-tp6Olmn6B2CkxysWPQe1?usp=sharing)
 
 ## Getting Started
