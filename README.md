@@ -14,7 +14,7 @@ Take a look into the Google Colab Notebook in the repo for a quick run in order 
 - Install Docker and ensure it is running
     - [Docker Desktop for Mac and Windows](https://www.docker.com/products/docker-desktop)
     - [Docker Engine for Linux](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
-    - Additional step for Linux: install [docker compose](https://docs.docker.com/compose/install/#install-compose) as well.
+    - Additional step for Linux: install [docker compose](https://docs.docker.com/compose/install/#install-compose) as well
 - Download model weights by running `download_weights.sh`
 - [Install Make](http://gnuwin32.sourceforge.net/packages/make.htm) if you're on Windows. OSX already has it installed. Linux will tell you how to install it (i.e., `sudo apt-get install make`)
 
