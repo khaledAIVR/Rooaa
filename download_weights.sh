@@ -6,4 +6,4 @@ curl https://pjreddie.com/media/files/yolov3.weights --output yolov3.weights
 cd ..
 mkdir densedepth
 cd densedepth
-curl https://s3-eu-west-1.amazonaws.com/densedepth/nyu.h5 --output nyu.h5
+gdown https://drive.google.com/uc?id=19dfvGvDfCRYaqxVKypp1fRHwK7XtSjVu
