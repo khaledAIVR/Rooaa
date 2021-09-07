@@ -1,55 +1,65 @@
-absl-py==0.9.0
-astor==0.8.1
+absl-py==0.9.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.2.0"
+astor==0.8.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
+autopep8==1.5
 backports.weakref==1.0.post1
-certifi==2019.11.28
-cffi==1.14.0
-chardet==3.0.4
-click==7.0
-cryptography==2.8
-cycler==0.10.0
-decorator==4.4.2
+certifi==2019.11.28; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+cffi==1.14.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
+chardet==3.0.4; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+click==7.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+colorama==0.4.4; python_version >= "2.7" and python_full_version < "3.0.0" and platform_system == "Windows" or python_full_version >= "3.5.0" and platform_system == "Windows"
+cryptography==2.8; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
+cycler==0.10.0; python_version >= "3.6"
+decorator==4.4.2; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.2.0" and python_version >= "3.6"
+entrypoints==0.3; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "2.7"
 enum34==1.1.9
-flask==1.1.1
+filelock==3.0.12
+flake8==3.7.9; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
 flask-cors==3.0.8
 flask-socketio==4.2.1
-gast==0.3.3
+flask==1.1.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
+gast==0.3.3; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
+gdown==3.13.0
 google-pasta==0.1.8
-grpcio==1.27.2
+grpcio==1.27.2; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.2.0"
 h5py==2.10.0
-idna==2.9
-imageio==2.8.0
-itsdangerous==1.1.0
-jinja2==2.11.1
-keras==2.2.5
+idna==2.9; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+imageio==2.8.0; python_version >= "3.6"
+itsdangerous==1.1.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+jinja2==2.11.3; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 keras-applications==1.0.8
 keras-preprocessing==1.1.0
-kiwisolver==1.1.0
-markdown==3.2.1
-markupsafe==1.1.1
-matplotlib==3.2.0
-mock==4.0.1
-networkx==2.4
-numpy==1.18.1
+keras==2.2.5
+kiwisolver==1.1.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
+markdown==3.2.1; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.2.0" and python_version >= "3.5"
+markupsafe==1.1.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+matplotlib==3.2.0; python_version >= "3.6"
+mccabe==0.6.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
+mock==4.0.1; python_version >= "3.6"
+networkx==2.4; python_version >= "3.6"
+numpy==1.18.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.2.0" and python_version >= "3.6"
 opencv-python==4.2.0.32
-pillow==7.0.0
-protobuf==3.11.3
-pycparser==2.20
+pillow==7.0.0; python_version >= "3.5"
+protobuf==3.11.3; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.2.0"
+pycodestyle==2.5.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
+pycparser==2.20; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
+pyflakes==2.1.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
 pyopenssl==19.1.0
-pyparsing==2.4.6
-python-dateutil==2.8.1
+pyparsing==2.4.6; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.3.0" and python_version >= "3.6"
+pysocks==1.7.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+python-dateutil==2.8.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.3.0" and python_version >= "3.6"
 python-engineio==3.11.2
 python-socketio==4.4.0
-pywavelets==1.1.1
-pyyaml==5.3
-requests==2.23.0
-scikit-image==0.16.2
-scipy==1.4.1
-six==1.14.0
-tensorboard==1.14.0
-tensorflow==1.14.0
+pywavelets==1.1.1; python_version >= "3.6"
+pyyaml==5.4; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0"
+requests==2.23.0; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
+scikit-image==0.16.2; python_version >= "3.6"
+scipy==1.4.1; python_version >= "3.6"
+six==1.14.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
+tensorboard==1.14.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.2.0"
 tensorflow-estimator==1.14.0
+tensorflow==1.14.0
 termcolor==1.1.0
-urllib3==1.22
-werkzeug==1.0.0
-wheel==0.34.2
+tqdm==4.62.2; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
+urllib3==1.22; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+werkzeug==1.0.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 wrapt==1.12.0
