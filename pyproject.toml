@@ -6,7 +6,7 @@ authors = ["Abdelrahman Kandil <abdelrahmankandil@hotmail.com>"]
 
 [tool.poetry.dependencies]
 python = ">=3.7"
-flask = "^1.1.1"
+flask = "^2.2.5"
 flask_cors = "^3.0.8"
 pillow = "^9.0.0"
 pyopenssl = "^19.1.0"
