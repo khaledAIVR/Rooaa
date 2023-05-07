@@ -1,11 +1,16 @@
-# Docker compose commands
+COMPOSE := $(shell which docker-compose)
+ifeq ($(COMPOSE),)
+	COMPOSE := docker compose
+endif
 
 run:
-	docker-compose up
+	${COMPOSE} up
 
 build:
-	docker-compose up --build
+	${COMPOSE} up --build
 
+stop:
+	${COMPOSE} down
 
 # Poetry commands
 

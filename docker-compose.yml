@@ -4,7 +4,7 @@ services:
   web:
     build: .
     volumes:
-      - .:/usr/src/app
+      - ./rooaa/images/:/usr/src/app/rooaa/images/
     command: python3 manage.py -p
 
     depends_on:
@@ -16,7 +16,7 @@ services:
   yolo_service:
     build: .
     volumes:
-      - .:/usr/src/app
+      - ./rooaa/images/:/usr/src/app/rooaa/images/
     command: python3 MLService/yolo_service.py
     ports:
       - "5001:5001"
@@ -24,7 +24,7 @@ services:
   dense_service:
     build: .
     volumes:
-      - .:/usr/src/app
+      - ./rooaa/images/:/usr/src/app/rooaa/images/
     command: python3 MLService/dense_service.py
     ports:
       - "5002:5002"
