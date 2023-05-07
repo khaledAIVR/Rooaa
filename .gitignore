@@ -2,7 +2,8 @@
 .vscode
 .todo
 
-# local development settings
+# Rooaa
+rooaa/images/
 rooaa/local_settings.py
 redis-stable/
 # Dense Depth  & Yolo weights

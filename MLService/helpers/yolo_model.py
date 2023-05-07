@@ -10,8 +10,8 @@ def load_model():
     """ Load our YOLO object detector and returns configured model."""
 
     model = cv2.dnn.readNetFromDarknet(
-        str(Config.DARKNET_PATH / pl.Path("yolov3.cfg")),
-        str(Config.DARKNET_PATH / pl.Path("yolov3.weights")),
+        str(Config.DARKNET_CFG_PATH),
+        str(Config.DARKNET_WEIGHTS_PATH)
     )
     return model
 
@@ -27,7 +27,7 @@ class YoloModel:
         """ Loads model with given image. """
         if YoloModel.labels is None:
             # load the COCO class labels our YOLO model was trained on
-            coco_path = str(Config.DARKNET_PATH / pl.Path("coco/coco.names"))
+            coco_path = str(Config.DARKNET_COCO_PATH) 
             with open(coco_path) as coco_names:
                 YoloModel.labels = coco_names.read().strip().split("\n")
 

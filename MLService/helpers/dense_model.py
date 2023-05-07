@@ -77,7 +77,7 @@ def dense_load_model():
     K.clear_session()
 
     # Load model into GPU / CPU
-    model = load_model(Config.DENSE_PATH / pl.Path("nyu.h5"),
+    model = load_model(Config.DENSE_WEIGHTS_PATH, 
                        custom_objects=custom_objects, compile=False)
     model._make_predict_function()
     return model
