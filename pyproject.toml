@@ -15,7 +15,7 @@ keras = "2.2.5"
 tensorflow = "1.14.0"
 matplotlib = "3.2.0"
 scikit-image = "0.16.2"
-requests = "2.23.0"
+requests = "2.31.0"
 flask-socketio = "4.2.1"
 
 [tool.poetry.dev-dependencies]
